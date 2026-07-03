@@ -1,0 +1,5 @@
+pandas
+openpyxl
+cryptography
+python-dotenv
+phonenumbers
