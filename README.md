@@ -87,11 +87,11 @@ The platform separates responsibilities into three distinct architectural layers
 
 ```
 
-### **Data Storage & Encryption Schema Breakdown**
+Data Storage & Encryption Schema Breakdown
 
 This section demonstrates how data is transformed and stored across the operational and analytical layers, highlighting the strict PII masking, SHA-256 deterministic hashing, and AES-256 (Fernet) encryption protocols.
 
-### 
+
 ==================================================================
  1. BASE TABLE: customers (Physical Storage Layer)
 ==================================================================
@@ -101,7 +101,6 @@ This section demonstrates how data is transformed and stored across the operatio
 2             3    Neha Sharma     UAE          AE  51ee8e9c1843e540ba9451a443c8b5aba425207d985bd2...  gAAAAABqR8W7shBNxf3gMkV6cYnPvF1r7Zu4WEWVg7flep...
 
 
-### 
 ==================================================================
  2. BASE TABLE: orders (Transactional Fact Layer)
 ==================================================================
@@ -112,9 +111,6 @@ This section demonstrates how data is transformed and stored across the operatio
 3      1004            2  2026-06-15 00:00:00         560.0         Pending              USA
 
 
----
-
-### 
 ==================================================================
  3. SECURE VIEW: v_analytics_customer_orders (Analytics Layer)
 ==================================================================
@@ -122,10 +118,6 @@ This section demonstrates how data is transformed and stored across the operatio
 0             1      Asha Nair          US  e22b90afdce0a8bf96337544a5128065c519dc3764743f...    1001.0  2026-06-01 00:00:00         250.0       Delivered
 1             1      Asha Nair          US  e22b90afdce0a8bf96337544a5128065c519dc3764743f...    1002.0  2026-06-10 00:00:00         120.0         Shipped
 
-
----
-
-### 
 
 ==================================================================
 GENERATED REPORT: Customer Lifetime Value (LTV) from Secure View
@@ -138,10 +130,6 @@ GENERATED REPORT: Customer Lifetime Value (LTV) from Secure View
 4             5       Sara Ali          US           150.0             1
 
 
----
-
-### 
-
 ---  Operational Security Execution Verification ---
 Operational ID Reference: 1
 Customer Name:            Asha Nair
@@ -150,5 +138,3 @@ Decrypted Runtime Target: +15551234567
 ------------------------------------------------------
 
 
-
-----
