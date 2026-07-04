@@ -86,3 +86,69 @@ The platform separates responsibilities into three distinct architectural layers
 3. **Operational Layer (Decoupled):** Implements an isolated application-layer execution service that leverages symmetric AES-256 (Fernet) decryption strictly in-memory for real-time transactional utility (e.g., dispatching SMS shipping updates).
 
 ```
+
+### **Data Storage & Encryption Schema Breakdown**
+
+This section demonstrates how data is transformed and stored across the operational and analytical layers, highlighting the strict PII masking, SHA-256 deterministic hashing, and AES-256 (Fernet) encryption protocols.
+
+### 
+==================================================================
+ 1. BASE TABLE: customers (Physical Storage Layer)
+==================================================================
+    customer_id  customer_name country country_std                                       hashed_phone                                    encrypted_phone
+0             1      Asha Nair     USA          US  e22b90afdce0a8bf96337544a5128065c519dc3764743f...  gAAAAABqR8W7gFXYFOTzISfmgSClLpD2_BjcSZMh7y_Gon...
+1             2    Rahul Menon     USA          US  4ae176b2ead702c931fa0ea1754b708ec1bd43f546d949...  gAAAAABqR8W7dyn5jdv87_CO0SiKQG7zNW6sZCdcdxk_Kh...
+2             3    Neha Sharma     UAE          AE  51ee8e9c1843e540ba9451a443c8b5aba425207d985bd2...  gAAAAABqR8W7shBNxf3gMkV6cYnPvF1r7Zu4WEWVg7flep...
+
+
+### 
+==================================================================
+ 2. BASE TABLE: orders (Transactional Fact Layer)
+==================================================================
+   order_id  customer_id           order_date  order_amount delivery_status delivery_address
+0      1001            1  2026-06-01 00:00:00         250.0       Delivered       California
+1      1002            1  2026-06-10 00:00:00         120.0         Shipped       California
+2      1003            2  2026-06-02 00:00:00         340.0       Delivered              USA
+3      1004            2  2026-06-15 00:00:00         560.0         Pending              USA
+
+
+---
+
+### 
+==================================================================
+ 3. SECURE VIEW: v_analytics_customer_orders (Analytics Layer)
+==================================================================
+    customer_id  customer_name country_std                                       hashed_phone  order_id           order_date  order_amount delivery_status
+0             1      Asha Nair          US  e22b90afdce0a8bf96337544a5128065c519dc3764743f...    1001.0  2026-06-01 00:00:00         250.0       Delivered
+1             1      Asha Nair          US  e22b90afdce0a8bf96337544a5128065c519dc3764743f...    1002.0  2026-06-10 00:00:00         120.0         Shipped
+
+
+---
+
+### 
+
+==================================================================
+GENERATED REPORT: Customer Lifetime Value (LTV) from Secure View
+==================================================================
+    customer_id  customer_name country_std  lifetime_value  total_orders
+0             1      Asha Nair          US           370.0             2
+1             2    Rahul Menon          US           900.0             2
+2             3    Neha Sharma          AE            99.0             1
+3             4    John Mathew          US           750.0             2
+4             5       Sara Ali          US           150.0             1
+
+
+---
+
+### 
+
+---  Operational Security Execution Verification ---
+Operational ID Reference: 1
+Customer Name:            Asha Nair
+Encrypted Target Token:   gAAAAABqR8W7gFXYFOTzISfmgSClLp...
+Decrypted Runtime Target: +15551234567
+------------------------------------------------------
+
+
+
+----
