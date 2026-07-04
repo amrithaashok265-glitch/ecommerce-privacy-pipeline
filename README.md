@@ -1,6 +1,6 @@
-# 🛡️ End-to-End Enterprise Data Platform & Privacy Engineering Pipeline
+# End-to-End Enterprise Data Platform & Privacy Engineering Pipeline
 
-This repository contains a production-ready data engineering framework that implements scalable ETL pipelines, relational data modeling, and robust data privacy controls. The architecture adheres to global compliance standards (like GDPR and HIPAA) by securing Personally Identifiable Information (PII) at rest and enforcing strict access boundaries between downstream data consumers.
+This repository contains a production-ready data engineering framework that implements scalable ETL pipelines, relational data modeling, and robust data privacy controls. The architecture adheres to global compliance standards by securing Personally Identifiable Information (PII) at rest and enforcing strict access boundaries between downstream data consumers.
 
 ---
 
@@ -46,13 +46,13 @@ This project helped me truly understand how to handle data privacy in two comple
 
 * **customer_table.xlsx & order_table.xlsx (The Raw Datasets):** These are the source Excel files provided in the case study that contain our uncleaned customer profiles and transactional transaction sheets.
 
-* **.env (Environment Secrets File):** This file stores your highly sensitive ENCRYPTION_KEY and your cryptographic SALT value. By separating these configurations into a private text file, you ensure your secret keys are injected directly into the application's memory at runtime without ever leaking into your public code repositories.
+* **.env (Environment Secrets File):** This file stores highly sensitive ENCRYPTION_KEY and cryptographic SALT value. By separating these configurations into a private text file, ensure that secret keys are injected directly into the application's memory at runtime without ever leaking into public code repositories.
 ---
 
 ## Step's to generate keys and run the architecture.
 
 * **Step 1: Generate Custom Cryptographic Encryption Key**
-Run this command in your terminal to create your symmetric AES-256 key:
+Run this command in terminal to create symmetric AES-256 key:
 
    python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"
 
@@ -85,27 +85,4 @@ The platform separates responsibilities into three distinct architectural layers
 2. **Analytical Layer (Masked):** Exposes a virtual SQL database view containing irreversible SHA-256 hashes for data analytics and metric tracking (e.g., Customer Lifetime Value) without exposing actual contact numbers.
 3. **Operational Layer (Decoupled):** Implements an isolated application-layer execution service that leverages symmetric AES-256 (Fernet) decryption strictly in-memory for real-time transactional utility (e.g., dispatching SMS shipping updates).
 
-```text
- [Messy Excel Sources] 
-         │
-         ▼
- ┌────────────────────────────────────────────────────────┐
- │            Python Ingestion Engine (ETL)               │ ──> [Automated Unit Test Suite]
- └────────────────────────────────────────────────────────┘
-         │
-         ├─── Irreversible SHA-256 Hashing + Salt
-         └─── Reversible AES-256 Symmetric Encryption
-         │
-         ▼
- ┌────────────────────────────────────────────────────────┐
- │           SQLite Physical Layer (Base Tables)          │
- └────────────────────────────────────────────────────────┘
-         │                                       │
-         ▼ (SQL View Boundary)                   ▼ (Programmatic Runtime Access)
- ┌───────────────────────────────┐       ┌───────────────────────────────┐
- │       Analytics Layer         │       │       Operational Layer       │
- │   (v_analytics_customer_orders)│      │    (In-Memory PII Decryption) │
- └───────────────────────────────┘       └───────────────────────────────┘
-         │                                       │
-         ▼                                       ▼
-  [LTV Business Reports]                 [Transient SMS Notification API]
+```
